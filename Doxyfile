@@ -1,0 +1,7 @@
+
+PROJECT_NAME           = "Laboratorio 3 - Herrera Marcelo Joaquin"
+INPUT                  = src inc
+OUTPUT_DIRECTORY       = build/doc
+RECURSIVE              = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO

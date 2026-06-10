@@ -37,6 +37,8 @@ SPDX-License-Identifier: MIT
 #include "digital.h"
 #include "board.h"
 #include "chip.h"
+#include "screen.h"
+#include <stdint.h>
 /* === Header for C++ compatibility ================================================================================ */
 
 #ifdef __cplusplus
@@ -54,10 +56,14 @@ typedef struct board_s {
     digital_output_t led_amarillo;
     digital_output_t led_verde;
     digital_output_t led_rojo;
-    digital_input_t tecla_prender;
-    digital_input_t tecla_apagar;
-    digital_input_t tecla_cambiar;
-    digital_input_t tecla_probar;
+    digital_output_t buzzer;
+    digital_input_t tecla_F4;
+    digital_input_t tecla_F3;
+    digital_input_t tecla_F2;
+    digital_input_t tecla_F1;
+    digital_input_t tecla_cancelar;
+    digital_input_t tecla_aceptar;
+    display_t display;
 } const * const board_t;
 
 /* === Public variable declarations ================================================================================ */

@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
-Copyright 2016-2025, Laboratorio de Microprocesadores
-Facultad de Ciencias Exactas y Tecnología
+Copyright 2016-2026, Laboratorio de Microprocesadores
+Facultad de Ciencias Exactas y Tecnologia
 Universidad Nacional de Tucuman
 http://www.microprocesadores.unt.edu.ar/
 
-Copyright 2016-2025, Esteban Volentini <evolentini@herrera.unt.edu.ar>
+Copyright 2026, Marcelo Joaquin Herrera <marceloherrera275@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -83,6 +83,7 @@ static display_t DisplayAllocate(void) {
     return &instances[0];
 }
 /* === Public function implementation ========================================================== */
+
 display_t DisplayCreate(uint8_t digits, display_driver_t driver) {
     display_t display = DisplayAllocate();
 

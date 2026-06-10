@@ -1,9 +1,10 @@
 /************************************************************************************************
-Copyright (c) 2022-2023, Laboratorio de Microprocesadores
-Facultad de Ciencias Exactas y Tecnología, Universidad Nacional de Tucumán
-https://www.microprocesadores.unt.edu.ar/
+Copyright 2016-2026, Laboratorio de Microprocesadores
+Facultad de Ciencias Exactas y Tecnologia
+Universidad Nacional de Tucuman
+http://www.microprocesadores.unt.edu.ar/
 
-Copyright (c) 2022-2023, Esteban Volentini <evolentini@herrera.unt.edu.ar>
+Copyright 2026, Marcelo Joaquin Herrera <marceloherrera275@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -42,62 +43,13 @@ SPDX-License-Identifier: MIT
 
 /* === Private data type declarations ========================================================== */
 
-/**
- * @brief Enumeration with color sequence of RGB led
- */
-typedef enum rgb_color_e {
-    LED_RED_ON = 0,
-    LED_RED_OFF,
-    LED_GREEN_ON,
-    LED_GREEN_OFF,
-    LED_BLUE_ON,
-    LED_BLUE_OFF,
-} rgb_color_t;
-
 /* === Private variable declarations =========================================================== */
 
 /* === Private function declarations =========================================================== */
 
-/**
- * @brief Function to configure pins and gpio bits used by board leds
- */
-//static void ConfigureLeds(void);
-
-/**
- * @brief Function to configure pins and gpio bits used by board keys
- */
-//static void ConfigureKeys(void);
-
-/**
- * @brief Function to flash RGB led in sequence
- */
-//static void FlashLed(board_t placa);
-
-/**
- * @brief Function to switch on and off a led with two keys
- */
-//static void SwitchLed(board_t placa);
-
-/**
- * @brief Function to switch on and off a led with a single key
- */
-//static void ToggleLed(board_t placa);
-
-/**
- * @brief Function to turn on a led while a key is pressed
- */
-//static void TestLed(board_t placa);
-
-/**
- * @brief Function to generate a delay of approximately 100 ms
- */
-//static void Delay(void);
-
 /* === Public variable definitions ============================================================= */
 
 /* === Private variable definitions ============================================================ */
-
-//static board_t board;
 
 /* === Private function implementation ========================================================= */
 

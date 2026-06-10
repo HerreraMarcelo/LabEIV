@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
-Copyright 2016-2025, Laboratorio de Microprocesadores
+Copyright 2016-2026, Laboratorio de Microprocesadores
 Facultad de Ciencias Exactas y Tecnologia
 Universidad Nacional de Tucuman
 http://www.microprocesadores.unt.edu.ar/
 
-Copyright 2016-2025, Esteban Volentini <evolentini@herrera.unt.edu.ar>
+Copyright 2026, Marcelo Joaquin Herrera <marceloherrera275@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -50,12 +50,6 @@ extern "C" {
 /* === Public data type declarations =============================================================================== */
 
 typedef struct board_s {
-    digital_output_t ledRGB_azul;
-    digital_output_t ledRGB_verde;
-    digital_output_t ledRGB_rojo;
-    digital_output_t led_amarillo;
-    digital_output_t led_verde;
-    digital_output_t led_rojo;
     digital_output_t buzzer;
     digital_input_t tecla_F4;
     digital_input_t tecla_F3;

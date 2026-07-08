@@ -1,0 +1,216 @@
+/*********************************************************************************************************************
+Copyright 2016-2026, Laboratorio de Microprocesadores
+Facultad de Ciencias Exactas y Tecnologia
+Universidad Nacional de Tucuman
+http://www.microprocesadores.unt.edu.ar/
+
+Copyright 2026, Marcelo Joaquin Herrera <marceloherrera275@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+SPDX-License-Identifier: MIT
+*************************************************************************************************/
+
+/** @file reloj.c
+ ** @brief Implementación del módulo reloj
+ **/
+
+/* === Headers files inclusions ================================================================ */
+
+#include "reloj.h"
+#include <stddef.h>
+#include <string.h>
+#include <stdlib.h>
+
+/* === Macros definitions ====================================================================== */
+
+/* === Private data type declarations ========================================================== */
+
+/* === Private function declarations =========================================================== */
+
+/* === Private variable definitions ============================================================ */
+
+struct clock_s {
+    clock_time_t current_time;
+    clock_time_t alarm_time;
+    bool valid_time;
+    bool alarm_enabled;       
+    uint16_t ticks_per_second; 
+    uint16_t tick_counter;    
+    clock_event_handler_t alarm_handler;
+};
+
+/* === Public variable definition  ============================================================= */
+
+/* === Private function definitions ============================================================ */
+
+/* === Public function implementation ========================================================== */
+
+clock_t RelojCreate(uint16_t ticks_por_segundo, clock_event_handler_t callback){
+    clock_t self = malloc(sizeof(struct clock_s));
+    if(self != NULL){
+        self->valid_time = false;
+        self->alarm_enabled = false; 
+        self->ticks_per_second = ticks_por_segundo;
+        self->tick_counter = 0;                    
+        self->alarm_handler = callback;
+        memset(&(self->current_time), 0, sizeof(clock_time_t));
+        memset(&(self->alarm_time), 0, sizeof(clock_time_t));
+    }
+    return self;
+}
+
+bool GetCurrentTime(clock_t reloj, hora_t hora_actual){
+    if(reloj == NULL || hora_actual == NULL){
+        return false;
+    }
+
+    if(!reloj->valid_time){
+        memset(hora_actual, 0, sizeof(hora_t));
+        return false;
+    }
+
+    memcpy(hora_actual, reloj->current_time.bcd, sizeof(hora_t));
+    return true;
+}
+
+bool SetCurrentTime(clock_t reloj, hora_t nueva_hora) {
+    if (reloj == NULL || nueva_hora == NULL) {
+        return false;
+    }
+    
+    memcpy(reloj->current_time.bcd, nueva_hora, sizeof(hora_t));
+   
+    reloj->valid_time = true;
+    
+    return true;
+}
+
+void ClockTick(clock_t reloj) {
+    if (reloj == NULL || !reloj->valid_time) {
+        return;
+    }
+
+    reloj->tick_counter++;
+
+    if (reloj->tick_counter >= reloj->ticks_per_second) {
+        reloj->tick_counter = 0;
+
+        if (reloj->alarm_enabled && reloj->alarm_handler != NULL) {
+            if (memcmp(reloj->current_time.bcd, reloj->alarm_time.bcd, sizeof(hora_t)) == 0) {
+                reloj->alarm_handler(reloj); 
+            }
+        }
+
+        reloj->current_time.bcd[5]++;
+
+        if (reloj->current_time.bcd[5] > 9) {
+            reloj->current_time.bcd[5] = 0;
+            reloj->current_time.bcd[4]++;
+
+            if (reloj->current_time.bcd[4] > 5) {
+                reloj->current_time.bcd[4] = 0;
+                reloj->current_time.bcd[3]++;
+
+                if (reloj->current_time.bcd[3] > 9) {
+                    reloj->current_time.bcd[3] = 0;
+                    reloj->current_time.bcd[2]++;
+
+                    if (reloj->current_time.bcd[2] > 5) {
+                        reloj->current_time.bcd[2] = 0;
+                        reloj->current_time.bcd[1]++;
+
+                        if (reloj->current_time.bcd[1] > 9) {
+                            reloj->current_time.bcd[1] = 0;
+                            reloj->current_time.bcd[0]++;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (reloj->current_time.bcd[0] == 2 && reloj->current_time.bcd[1] == 4) {
+            reloj->current_time.bcd[0] = 0;
+            reloj->current_time.bcd[1] = 0;
+        }
+    }
+}
+
+bool SetAlarmTime(clock_t reloj, hora_t nueva_alarma) {
+    if (reloj == NULL || nueva_alarma == NULL) {
+        return false;
+    }
+    memcpy(reloj->alarm_time.bcd, nueva_alarma, sizeof(hora_t));
+    return true;
+}
+
+bool GetAlarmTime(clock_t reloj, hora_t alarma_actual) {
+    if (reloj == NULL || alarma_actual == NULL) {
+        return false;
+    }
+    memcpy(alarma_actual, reloj->alarm_time.bcd, sizeof(hora_t));
+    return true;
+}
+
+void SetAlarmEnabled(clock_t reloj, bool estado) {
+    if (reloj != NULL) {
+        reloj->alarm_enabled = estado;
+    }
+}
+
+bool IsAlarmEnabled(clock_t reloj) {
+    if (reloj == NULL) {
+        return false;
+    }
+    return reloj->alarm_enabled;
+}
+
+bool PostponeAlarm(clock_t reloj, uint8_t minutos) {
+    if (reloj == NULL || minutos == 0) {
+        return false;
+    }
+
+    uint8_t min_unidades = minutos % 10;
+    uint8_t min_decenas = minutos / 10;
+
+    reloj->alarm_time.bcd[3] += min_unidades;
+    if (reloj->alarm_time.bcd[3] > 9) {
+        reloj->alarm_time.bcd[3] -= 10;
+        reloj->alarm_time.bcd[2]++;
+    }
+
+    reloj->alarm_time.bcd[2] += min_decenas;
+    if (reloj->alarm_time.bcd[2] > 5) {
+        reloj->alarm_time.bcd[2] -= 6;
+        reloj->alarm_time.bcd[1]++; 
+
+        if (reloj->alarm_time.bcd[1] > 9) {
+            reloj->alarm_time.bcd[1] = 0;
+            reloj->alarm_time.bcd[0]++; 
+        }
+    }
+
+    if (reloj->alarm_time.bcd[0] == 2 && reloj->alarm_time.bcd[1] == 4) {
+        reloj->alarm_time.bcd[0] = 0;
+        reloj->alarm_time.bcd[1] = 0;
+    }
+
+    return true;
+}
+
+/* === End of documentation ==================================================================== */

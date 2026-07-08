@@ -30,7 +30,7 @@ SPDX-License-Identifier: MIT
 #define RELOJ_H
 
 /** @file reloj.h
- ** @brief Módulo para la gestión del reloj en el sistema
+ ** @brief modulo para la gestion del reloj en el sistema
  **/
 
 /* === Headers files inclusions ==================================================================================== */
@@ -57,44 +57,44 @@ typedef union {
 
 /* === Public data type declarations =============================================================================== */
 
-// 1. Primero declaramos la estructura abstracta del reloj
+// estructura abstracta del reloj
 typedef struct clock_s * clock_t;
 
-// 2. Ahora que 'clock_t' ya existe para el compilador, definimos el callback de la alarma
+// callback de la alarma
 typedef void (*clock_event_handler_t)(clock_t reloj);
 
-// Tipo para representar la hora en formato BCD (6 dígitos: HHMMSS)
+// formato BCD 6 dígitos para horas, minutos y segundos
 typedef uint8_t hora_t[6];
 
 /* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
-// Función para crear un nuevo reloj
+// crear un nuevo reloj
 clock_t RelojCreate(uint16_t ticks_por_segundo, clock_event_handler_t callback);
 
-// Función para obtener la hora actual del reloj
+// obtener la hora actual del reloj
 bool GetCurrentTime(clock_t reloj, hora_t hora_actual);
 
-// Función para ajustar la hora del reloj
+// ajustar la hora del reloj
 bool SetCurrentTime(clock_t reloj, hora_t nueva_hora);
 
-// Función para procesar cada tick del sistema
+// procesar cada tick del sistema
 void ClockTick(clock_t reloj);
 
-// Funciones para manejar la alarma
+// funciones para manejar la alarma
 bool SetAlarmTime(clock_t reloj, hora_t nueva_alarma);
 
-// Función para obtener la hora de la alarma
+// funcion para obtener la hora de la alarma
 bool GetAlarmTime(clock_t reloj, hora_t alarma_actual);
 
-// Función para habilitar o deshabilitar la alarma
+// habilitar o deshabilitar la alarma
 void SetAlarmEnabled(clock_t reloj, bool estado);
 
-// Función para consultar si la alarma está habilitada
+// consultar si la alarma está habilitada
 bool IsAlarmEnabled(clock_t reloj);
 
-// Función para pospone la alarma una cierta cantidad de minutos
+// posponer la alarma una cierta cantidad de minutos
 bool PostponeAlarm(clock_t reloj, uint8_t minutos);
 
 /* === End of conditional blocks =================================================================================== */
